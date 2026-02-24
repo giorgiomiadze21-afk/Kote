@@ -308,10 +308,11 @@
       aspect-ratio: 1;
       cursor: pointer;
       transition: transform 0.3s ease;
+      background: #f0f0f0;
     }
 
     .photo-item:hover {
-      transform: scale(1.02);
+      transform: scale(1.05);
     }
 
     .photo-item img {
@@ -321,7 +322,7 @@
       display: block;
     }
 
-    /* Modal */
+    /* ===== MODAL ===== */
     .modal {
       display: none;
       position: fixed;
@@ -330,24 +331,72 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.85);
       animation: fadeIn 0.3s;
     }
 
-    .modal.active { display: flex; }
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .modal-content {
-      margin: auto;
-      max-width: 80vw;
-      max-height: 80vh;
       position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       animation: zoomIn 0.3s;
     }
 
-    .modal-content img {
-      width: 100%;
-      height: auto;
+    .modal-image-container {
+      position: relative;
+      max-width: 90vw;
+      max-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-image-container img {
+      max-width: 100%;
+      max-height: 100%;
       display: block;
+      border-radius: 4px;
+    }
+
+    .modal-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-top: 20px;
+      gap: 20px;
+    }
+
+    .modal-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-family: 'FiraGO', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      user-select: none;
+    }
+
+    .modal-btn:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    .modal-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
     }
 
     .modal-close {
@@ -365,9 +414,19 @@
       justify-content: center;
       border-radius: 50%;
       transition: background 0.3s;
+      z-index: 101;
     }
 
-    .modal-close:hover { background: #fff; }
+    .modal-close:hover {
+      background: #fff;
+    }
+
+    .modal-counter {
+      color: white;
+      font-size: 0.9rem;
+      text-align: center;
+      flex: 1;
+    }
 
     @keyframes fadeIn {
       from { opacity: 0; }
@@ -437,13 +496,17 @@
       text-decoration: none;
     }
 
-    footer a:hover { text-decoration: underline; }
+    footer a:hover {
+      text-decoration: underline;
+    }
 
     @media (max-width: 768px) {
       .hero-title { font-size: 2.2rem; }
       .section-title { font-size: 1.5rem; }
       .appearance-grid { grid-template-columns: 1fr; }
       .photo-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+      .modal-controls { flex-direction: column; }
+      .modal-btn { width: 100%; }
     }
   </style>
 </head>
@@ -467,7 +530,7 @@
   <div class="badge-missing">⚠ დაიკარგა · Missing</div>
   
   <div class="hero-photo-frame">
-    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCADAAMADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlbaWmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==" alt="კოტე — Missing Cat">
+    <img id="heroImage" src="https://raw.githubusercontent.com/giorgiomiadze21-afk/Kote/main/images/pic1.jpg" alt="კოტე — Missing Cat" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23ddd%22 width=%22300%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-family=%22FiraGO%22 font-size=%2216%22%3Eფოტოს ჩატვირთვა...%3C/text%3E%3C/svg%3E';">
   </div>
 
   <h1 class="hero-title">კოტე</h1>
@@ -500,11 +563,11 @@
 <section class="gallery-section" id="gallery">
   <div class="gallery-header">
     <h2>კოტის ფოტოები</h2>
-    <p>კოტის ყველა ფოტო — დაიკარგის დინამიკის შემთხვევაში, ეს იქნებს დამხმელი ფოტოები ძიებაში.</p>
+    <p>კოტის ყველა ფოტო — დაიკარგის დინამიკის შემთხვევაში, ეს იქნებს დამხმელი ფოტოები ძიებაში. დააჭირეთ ფოტოს გასადიდლად.</p>
   </div>
 
   <div class="photo-grid" id="photoGrid">
-    <!-- Photos will be inserted here by JavaScript -->
+    <!-- Photos will be generated by JavaScript -->
   </div>
 </section>
 
@@ -534,51 +597,112 @@
 <!-- ===== FOOTER ===== -->
 <footer>
   <p>🐾 კოტე, გვიბრუნდი · Shine on, you crazy diamond 🐾</p>
-  <p style="margin-top: 8px; font-size: 0.75rem;">დეკემბერი 2026 · Tbilisi, Georgia</p>
+  <p style="margin-top: 8px; font-size: 0.75rem;">თებერვალი 2026 · Tbilisi, Georgia</p>
 </footer>
 
 <!-- ===== MODAL ===== -->
 <div class="modal" id="photoModal">
+  <button class="modal-close" onclick="closeModal()">&times;</button>
   <div class="modal-content">
-    <button class="modal-close" onclick="closeModal()">&times;</button>
-    <img id="modalImage" src="" alt="">
+    <div class="modal-image-container">
+      <img id="modalImage" src="" alt="">
+    </div>
+    <div class="modal-controls">
+      <button class="modal-btn" id="prevBtn" onclick="previousPhoto()">← წინა</button>
+      <div class="modal-counter">
+        <span id="photoCounter">1 / 1</span>
+      </div>
+      <button class="modal-btn" id="nextBtn" onclick="nextPhoto()">შემდეგი →</button>
+    </div>
   </div>
 </div>
 
 <script>
-// Photo data - embedded as base64
-const photoData = [
-  { id: 1, title: "Pic1", base64: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCADAAMADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==" },
-  { id: 2, title: "Pic2", base64: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCADAAMADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==" },
-  { id: 3, title: "Pic3", base64: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCADAAMADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==" },
-];
+// Configuration - EASY TO ADD MORE PHOTOS
+const TOTAL_PHOTOS = 24; // Change this number to add/remove photos
+const BASE_URL = 'https://raw.githubusercontent.com/giorgiomiadze21-afk/Kote/main/images';
 
-// Populate gallery
-function loadGallery() {
-  const grid = document.getElementById('photoGrid');
-  
-  // Create 24 photo items (repeating placeholders)
-  for (let i = 1; i <= 40; i++) {
-    const item = document.createElement('div');
-    item.className = 'photo-item';
-    item.onclick = () => openModal(`Pic${i}`);
-    
-    const img = document.createElement('img');
-    img.alt = `Pic${i}`;
-    img.src = `https://raw.githubusercontent.com/giorgiomiadze21-afk/Kote/main/images/pic${i}.jpg`;
-    
-    item.appendChild(img);
-    grid.appendChild(item);
+let currentPhotoIndex = 0;
+let photos = [];
+
+// Generate photo URLs
+function generatePhotoURLs() {
+  photos = [];
+  for (let i = 1; i <= TOTAL_PHOTOS; i++) {
+    photos.push({
+      id: i,
+      url: `${BASE_URL}/pic${i}.jpg`,
+      title: `Pic ${i}`
+    });
   }
 }
 
-function openModal(title) {
+// Load gallery
+function loadGallery() {
+  generatePhotoURLs();
+  const grid = document.getElementById('photoGrid');
+  grid.innerHTML = '';
+  
+  photos.forEach((photo, index) => {
+    const item = document.createElement('div');
+    item.className = 'photo-item';
+    item.onclick = () => openModal(index);
+    
+    const img = document.createElement('img');
+    img.alt = photo.title;
+    img.src = photo.url;
+    img.onerror = function() {
+      this.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-family=%22FiraGO%22 font-size=%2212%22%3E📷%3C/text%3E%3C/svg%3E';
+    };
+    
+    item.appendChild(img);
+    grid.appendChild(item);
+  });
+}
+
+function openModal(index) {
+  currentPhotoIndex = index;
   const modal = document.getElementById('photoModal');
   const img = document.getElementById('modalImage');
-  img.alt = title;
-  img.src = photoData[0].base64;
+  
+  updateModalImage();
+  updateModalButtons();
+  
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
+}
+
+function updateModalImage() {
+  const img = document.getElementById('modalImage');
+  const counter = document.getElementById('photoCounter');
+  
+  img.src = photos[currentPhotoIndex].url;
+  img.alt = photos[currentPhotoIndex].title;
+  counter.textContent = `${currentPhotoIndex + 1} / ${photos.length}`;
+}
+
+function updateModalButtons() {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  
+  prevBtn.disabled = currentPhotoIndex === 0;
+  nextBtn.disabled = currentPhotoIndex === photos.length - 1;
+}
+
+function nextPhoto() {
+  if (currentPhotoIndex < photos.length - 1) {
+    currentPhotoIndex++;
+    updateModalImage();
+    updateModalButtons();
+  }
+}
+
+function previousPhoto() {
+  if (currentPhotoIndex > 0) {
+    currentPhotoIndex--;
+    updateModalImage();
+    updateModalButtons();
+  }
 }
 
 function closeModal() {
@@ -586,6 +710,16 @@ function closeModal() {
   modal.classList.remove('active');
   document.body.style.overflow = 'auto';
 }
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  const modal = document.getElementById('photoModal');
+  if (!modal.classList.contains('active')) return;
+  
+  if (e.key === 'ArrowRight') nextPhoto();
+  if (e.key === 'ArrowLeft') previousPhoto();
+  if (e.key === 'Escape') closeModal();
+});
 
 // Close modal on background click
 document.getElementById('photoModal').addEventListener('click', function(e) {
